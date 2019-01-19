@@ -1,0 +1,29 @@
+{
+  "name": "wsh",
+  "version": "1.0.0",
+  "description": "Shell for the web.",
+  "main": "./src/main.js",
+  "bin": "./src/main.js",
+  "scripts": {
+    "start": "node ./src/main"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yishn/wsh.git"
+  },
+  "keywords": [
+    "shell",
+    "search",
+    "browser"
+  ],
+  "author": "Yichuan Shen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yishn/wsh/issues"
+  },
+  "homepage": "https://github.com/yishn/wsh#readme",
+  "dependencies": {
+    "argv-split": "^2.0.1",
+    "express": "^4.16.4"
+  }
+}

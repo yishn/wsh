@@ -1,20 +1,28 @@
 #!/usr/bin/env node
 
 const express = require('express')
-const app = express()
-const port = 3000
+const config = require('../config')
+const wsh = require('./wsh')
 
-app.get('/', (req, res) => {
+const app = express()
+
+app.get('/', async (req, res) => {
     let query = req.query.q
 
-    if (query == null || query.trim() === '') {
-        res.sendStatus(400)
-        return
-    }
+    try {
+        let result = await wsh.process(query)
 
-    res.send(query)
+        if (result.type === 'redirect') {
+            res.redirect(result.data)
+        } else if (result.type === 'send') {
+            res.type('text/plain').send(`wsh $ ${query}\n\n${result.data}`)
+        }
+    } catch (err) {
+        console.log(err.stack)
+        res.type('text/plain').send(`wsh $ ${query}\n\n${err}`)
+    }
 })
 
-app.listen(port, () => {
-    console.log(`wsh listening on port ${port}.`)
+app.listen(config.port, () => {
+    console.log(`wsh listening on port ${config.port}.`)
 })

@@ -1,4 +1,3 @@
 module.exports = {
-    port: 33858,
-    log: false
+    port: 33858
 }

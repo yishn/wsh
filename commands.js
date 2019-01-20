@@ -1,4 +1,4 @@
-const {search} = require('./src/tools')
+const {search, qr} = require('./src/tools')
 
 module.exports = {
     g: search('https://google.com/search?q=%s', 'Perform a Google search.'),
@@ -17,5 +17,5 @@ module.exports = {
     wp: search('https://en.wikipedia.org/?search=%s', 'Search on English Wikipedia.'),
     wpde: search('https://de.wikipedia.org/?search=%s', 'Search on German Wikipedia.'),
     libgen: search('http://libgen.io/foreignfiction/index.php?s=%s&f_group=1', 'Look for a fiction book in Library Genesis.'),
-    qr: search('https://chart.apis.google.com/chart?chs=400x400&cht=qr&chl=%s', 'Get a QR code.')
+    qr: qr()
 }

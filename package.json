@@ -24,6 +24,7 @@
   "homepage": "https://github.com/yishn/wsh#readme",
   "dependencies": {
     "argv-split": "^2.0.1",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "javascript-qrcode": "^1.0.7"
   }
 }

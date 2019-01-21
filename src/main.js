@@ -28,6 +28,7 @@ app.get('/', async (req, res) => {
     try {
         let socketPromise
         let firstOut = true
+        let output = ''
 
         wsh.process(query, {
             redirect: url => {
@@ -37,15 +38,13 @@ app.get('/', async (req, res) => {
                 }
             },
             write: async data => {
-                if (firstOut) {
-                    firstOut = false
+                if (firstOut && config.websockets) {
                     let args = argvsplit(query)
 
                     res.send(outputTemplate.replace('`{{state}}`', JSON.stringify({
                         socketId,
                         query,
-                        args,
-                        command: ''
+                        args
                     })))
 
                     socketPromise = new Promise((resolve, reject) => {
@@ -66,10 +65,26 @@ app.get('/', async (req, res) => {
                     }).catch(() => null)
                 }
 
-                let socket = await socketPromise
-                if (socket && socket.readyState === WebSocket.OPEN) socket.send(data)
+                firstOut = false
+
+                if (!config.websockets) {
+                    output += data
+                } else {
+                    let socket = await socketPromise
+                    if (socket && socket.readyState === WebSocket.OPEN) socket.send(data)
+                }
             },
-            end: () => {}
+            end: () => {
+                if (!config.websockets) {
+                    let args = argvsplit(query)
+
+                    res.send(outputTemplate.replace('`{{state}}`', JSON.stringify({
+                        query,
+                        args,
+                        output
+                    })))
+                }
+            }
         })
     } catch (err) {
         console.log(err.stack)

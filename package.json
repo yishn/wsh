@@ -25,6 +25,8 @@
   "dependencies": {
     "argv-split": "^2.0.1",
     "express": "^4.16.4",
-    "javascript-qrcode": "^1.0.7"
+    "javascript-qrcode": "^1.0.7",
+    "uuid": "^3.3.2",
+    "ws": "^6.1.2"
   }
 }

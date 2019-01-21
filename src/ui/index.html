@@ -5,18 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>wsh</title>
 </head>
-<script>
-    let socketId = `${socketId}`
-    let socket = new WebSocket(window.location.replace(/^https?:/, 'ws:'))
-    let outputElement = document.getElementById('output')
-
-    socket.send(socketId)
-
-    socket.onmessage = evt => {
-        outputElement.innerText += evt.data
-    }
-</script>
 <body>
     <pre id="output"></pre>
+
+    <script>
+        let socketId = `${socketId}`
+        let socket = new WebSocket(window.location.toString().replace(/^https?:/, 'ws:'))
+        let outputElement = document.getElementById('output')
+
+        socket.onopen = () => {
+            socket.send(socketId)
+        }
+
+        socket.onmessage = evt => {
+            outputElement.innerText += evt.data
+        }
+    </script>
 </body>
 </html>

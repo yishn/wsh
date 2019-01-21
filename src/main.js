@@ -25,24 +25,8 @@ app.get('/', async (req, res) => {
     let query = req.query.q || ''
     let socketId = uuid()
 
-    let socketPromise = new Promise((resolve, reject) => {
-        setTimeout(() => {
-            wss.removeListener('connection', connectionListener)
-            reject()
-        }, 10000)
-
-        let connectionListener = socket => {
-            socket.once('message', data => {
-                if (data.toString() === socketId) {
-                    resolve(socket)
-                }
-            })
-        }
-
-        wss.once('connection', connectionListener)
-    }).catch(() => null)
-
     try {
+        let socketPromise
         let firstOut = true
 
         wsh.process(query, {
@@ -63,6 +47,23 @@ app.get('/', async (req, res) => {
                         args,
                         command: ''
                     })))
+
+                    socketPromise = new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            wss.removeListener('connection', connectionListener)
+                            reject()
+                        }, 10000)
+
+                        let connectionListener = socket => {
+                            socket.once('message', data => {
+                                if (data.toString() === socketId) {
+                                    resolve(socket)
+                                }
+                            })
+                        }
+
+                        wss.once('connection', connectionListener)
+                    }).catch(() => null)
                 }
 
                 let socket = await socketPromise

@@ -8,8 +8,13 @@ module.exports = {
     },
     run({query, args}, out) {
         let content = query.trim().slice(args[0].length).trim()
-        let mat = new QrCode(content).getData()
 
+        if (content === '') {
+            out.write('Needs at least one argument for the content.')
+            return
+        }
+
+        let mat = new QrCode(content).getData()
         if (mat.length % 2 !== 0) mat.push(mat[0].map(_ => 0))
 
         for (let y = 0; y < mat.length; y += 2) {

@@ -41,7 +41,7 @@
         queryElement.innerText = `wsh $ ${state.query || ''}`
 
         if (state.socketId != null) {
-            let socket = new WebSocket(window.location.toString().replace(/^https?:/, 'ws:'))
+            let socket = new WebSocket(window.location.toString().replace(/^http/, 'ws'))
 
             document.title = `wsh $ ${state.args[0] || ''}`
 

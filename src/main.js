@@ -25,15 +25,20 @@ app.get('/', async (req, res) => {
     let socketId = uuid()
 
     let socketPromise = new Promise((resolve, reject) => {
-        setTimeout(reject, 10000)
+        setTimeout(() => {
+            wss.removeListener('connection', connectionListener)
+            reject()
+        }, 10000)
 
-        wss.once('connection', socket => {
+        let connectionListener = socket => {
             socket.once('message', data => {
                 if (data.toString() === socketId) {
                     resolve(socket)
                 }
             })
-        })
+        }
+
+        wss.once('connection', connectionListener)
     }).catch(() => null)
 
     try {
@@ -49,7 +54,12 @@ app.get('/', async (req, res) => {
             write: async data => {
                 if (firstOut) {
                     firstOut = false
-                    res.send(outputTemplate.replace(/\$\{socketId\}/g, socketId))
+
+                    res.send(
+                        outputTemplate
+                        .replace(/\$\{socketId\}/g, socketId)
+                        .replace(/\$\{output\}/g, '')
+                    )
                 }
 
                 let socket = await socketPromise
@@ -60,9 +70,10 @@ app.get('/', async (req, res) => {
     } catch (err) {
         console.log(err.stack)
 
-        res.send(outputTemplate.replace(/\$\{socketId\}/g, socketId))
-
-        let socket = await socketPromise
-        if (socket && socket.readyState === WebSocket.OPEN) socket.send(err.toString())
+        res.send(
+            outputTemplate
+            .replace(/\$\{socketId\}/g, '')
+            .replace(/\$\{output\}/g, err.toString())
+        )
     }
 })

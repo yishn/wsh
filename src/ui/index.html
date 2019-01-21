@@ -6,19 +6,22 @@
     <title>wsh</title>
 </head>
 <body>
-    <pre id="output"></pre>
+    <pre id="output">${output}</pre>
 
     <script>
         let socketId = `${socketId}`
-        let socket = new WebSocket(window.location.toString().replace(/^https?:/, 'ws:'))
-        let outputElement = document.getElementById('output')
 
-        socket.onopen = () => {
-            socket.send(socketId)
-        }
+        if (socketId !== '') {
+            let socket = new WebSocket(window.location.toString().replace(/^https?:/, 'ws:'))
+            let outputElement = document.getElementById('output')
 
-        socket.onmessage = evt => {
-            outputElement.innerText += evt.data
+            socket.onopen = () => {
+                socket.send(socketId)
+            }
+
+            socket.onmessage = evt => {
+                outputElement.innerText += evt.data
+            }
         }
     </script>
 </body>

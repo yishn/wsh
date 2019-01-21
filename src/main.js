@@ -21,37 +21,38 @@ let outputTemplate = fs.readFileSync(path.join(__dirname, 'ui', 'index.html'), '
 
 wsh.loadCommands()
 
+function renderTemplate(template, state) {
+    return outputTemplate.replace('`{{state}}`', JSON.stringify(state))
+}
+
 app.get('/', async (req, res) => {
     let query = req.query.q || ''
     let socketId = uuid()
 
     try {
         let socketPromise
-        let firstOut = true
+        let firstWrite = true
         let output = ''
 
         wsh.process(query, {
-            redirect: url => {
-                if (firstOut) {
-                    firstOut = false
-                    res.redirect(url)
-                }
+            redirect(url) {
+                if (firstWrite) res.redirect(url)
             },
-            write: async data => {
-                if (firstOut && config.websockets) {
-                    let args = argvsplit(query)
-
-                    res.send(outputTemplate.replace('`{{state}}`', JSON.stringify({
-                        socketId,
-                        query,
-                        args
-                    })))
-
+            async write(data) {
+                if (firstWrite && config.websockets) {
                     socketPromise = new Promise((resolve, reject) => {
                         setTimeout(() => {
                             wss.removeListener('connection', connectionListener)
                             reject()
                         }, 10000)
+
+                        let args = argvsplit(query)
+
+                        res.send(renderTemplate(outputTemplate, {
+                            socketId,
+                            query,
+                            args
+                        }))
 
                         let connectionListener = socket => {
                             socket.once('message', data => {
@@ -65,7 +66,7 @@ app.get('/', async (req, res) => {
                     }).catch(() => null)
                 }
 
-                firstOut = false
+                firstWrite = false
 
                 if (!config.websockets) {
                     output += data
@@ -74,23 +75,23 @@ app.get('/', async (req, res) => {
                     if (socket && socket.readyState === WebSocket.OPEN) socket.send(data)
                 }
             },
-            end: () => {
+            end() {
                 if (!config.websockets) {
                     let args = argvsplit(query)
 
-                    res.send(outputTemplate.replace('`{{state}}`', JSON.stringify({
+                    res.send(renderTemplate(outputTemplate, {
                         query,
                         args,
                         output
-                    })))
+                    }))
                 }
             }
         })
     } catch (err) {
         console.log(err.stack)
 
-        res.send(outputTemplate.replace('`{{state}}`', JSON.stringify({
+        res.send(renderTemplate(outputTemplate, {
             output: err.toString()
-        })))
+        }))
     }
 })

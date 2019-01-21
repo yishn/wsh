@@ -5,6 +5,7 @@ const config = require('../config')
 const wsh = require('./wsh')
 
 const app = express()
+wsh.loadCommands()
 
 app.get('/', async (req, res) => {
     let query = req.query.q || ''

@@ -3,7 +3,8 @@ let {QrCode} = require('javascript-qrcode')
 exports.search = (url, description = null) => ({
     description: description || `Redirects to ${url}.`,
     help({args}, out) {
-        out.send(`${this.description}\n\nSYNOPSIS\n\t${args[1]} [...query]`)
+        out.write(`${this.description}\n\nSYNOPSIS\n\t${args[1]} [...query]`)
+        out.end()
     },
     run({query, args}, out) {
         let search = query.trim().slice(args[0].length).trim()
@@ -14,12 +15,12 @@ exports.search = (url, description = null) => ({
 exports.qr = () => ({
     description: 'Get a QR code.',
     help({args}, out) {
-        out.send(`${this.description}\n\nSYNOPSIS\n\t${args[1]} [...content]`)
+        out.write(`${this.description}\n\nSYNOPSIS\n\t${args[1]} [...content]`)
+        out.end()
     },
     run({query, args}, out) {
         let content = query.trim().slice(args[0].length).trim()
         let mat = new QrCode(content).getData()
-        let ascii = ''
 
         if (mat.length % 2 !== 0) mat.push(mat[0].map(_ => 0))
 
@@ -27,15 +28,15 @@ exports.qr = () => ({
             for (let x = 0; x < mat[y].length; x++) {
                 let [a, b] = [mat[y][x], mat[y + 1][x]]
 
-                if (a && !b) ascii += '▀'
-                else if (!a && b) ascii += '▄'
-                else if (a && b) ascii += '█'
-                else if (!a && !b) ascii += ' '
+                if (a && !b) out.write('▀')
+                else if (!a && b) out.write('▄')
+                else if (a && b) out.write('█')
+                else if (!a && !b) out.write(' ')
             }
 
-            ascii += '\n'
+            out.write('\n')
         }
 
-        out.send(ascii)
+        out.end()
     }
 })

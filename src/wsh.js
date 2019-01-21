@@ -5,35 +5,43 @@ const metaCommands = {
     ls: {
         description: 'Lists all commands.',
         help(_, out) {
-            out.send(`${this.description}\n\nSYNOPSIS\n\tls`)
+            out.write(`${this.description}\n\nSYNOPSIS\n\tls`)
+            out.end()
         },
         run(_, out) {
-            out.send(
-                Object.keys(allCommands)
+            let lines = Object.keys(allCommands)
                 .sort()
                 .map(command => `${command}\t${allCommands[command].description}`)
-                .join('\n')
-            )
+
+            for (let line of lines) {
+                out.write(line)
+                out.write('\n')
+            }
+
+            out.end()
         }
     },
     help: {
         description: 'Displays more information about a command.',
         help(_, out) {
-            out.send(`${this.description}\n\nSYNOPSIS\n\tman [command-name]`)
+            out.write(`${this.description}\n\nSYNOPSIS\n\tman [command-name]`)
+            out.end()
         },
         run(input, out) {
             let command = input.args[1]
 
-            return command == null ? out.send('Missing command-name argument.')
-                : allCommands[command] == null ? out.send(`Command '${command}' not found.`)
+            command == null ? out.write('Missing command-name argument.')
+                : allCommands[command] == null ? out.write(`Command '${command}' not found.`)
                 : allCommands[command].help(input, out)
+
+            out.end()
         }
     }
 }
 
 const allCommands = Object.assign({}, userCommands, metaCommands)
 
-exports.process = async query => {
+exports.process = (query, out) => {
     let args = []
     try { args = argvsplit(query.trim()) } catch (err) { }
     if (args.length === 0) throw new Error('Badly formed query.')
@@ -41,16 +49,5 @@ exports.process = async query => {
     let command = allCommands[args[0]]
     if (command == null) throw new Error(`Command '${args[0]}' not found.`)
 
-    return new Promise(resolve => {
-        command.run({query, args}, {
-            redirect: url => resolve({
-                type: 'redirect',
-                data: url
-            }),
-            send: content => resolve({
-                type: 'send',
-                data: content
-            })
-        })
-    })
+    command.run({query, args}, out)
 }

@@ -38,12 +38,11 @@
         let queryElement = document.getElementById('query')
         let outputElement = document.getElementById('output')
 
+        document.title = `wsh $ ${(state.args || [''])[0]}`
         queryElement.innerText = `wsh $ ${state.query || ''}`
 
         if (state.socketId != null) {
             let socket = new WebSocket(window.location.toString().replace(/^http/, 'ws'))
-
-            document.title = `wsh $ ${state.args[0] || ''}`
 
             socket.onopen = () => {
                 socket.send(state.socketId)

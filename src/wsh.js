@@ -38,7 +38,7 @@ exports.loadCommands = () => {
         help: {
             description: 'Displays more information about a command.',
             help(_, out) {
-                out.write(`${this.description}\n\nSYNOPSIS\n\tman [command-name]`)
+                out.write(`${this.description}\n\nSYNOPSIS\n\thelp [command-name]`)
                 out.end()
             },
             run(input, out) {

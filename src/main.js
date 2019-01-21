@@ -3,6 +3,7 @@
 const fs = require('fs')
 const http = require('http')
 const path = require('path')
+const argvsplit = require('argv-split')
 const express = require('express')
 const uuid = require('uuid/v4')
 const WebSocket = require('ws')
@@ -54,12 +55,14 @@ app.get('/', async (req, res) => {
             write: async data => {
                 if (firstOut) {
                     firstOut = false
+                    let args = argvsplit(query)
 
-                    res.send(
-                        outputTemplate
-                        .replace(/\$\{socketId\}/g, socketId)
-                        .replace(/\$\{output\}/g, '')
-                    )
+                    res.send(outputTemplate.replace('`{{state}}`', JSON.stringify({
+                        socketId,
+                        query,
+                        args,
+                        command: ''
+                    })))
                 }
 
                 let socket = await socketPromise
@@ -70,10 +73,8 @@ app.get('/', async (req, res) => {
     } catch (err) {
         console.log(err.stack)
 
-        res.send(
-            outputTemplate
-            .replace(/\$\{socketId\}/g, '')
-            .replace(/\$\{output\}/g, err.toString())
-        )
+        res.send(outputTemplate.replace('`{{state}}`', JSON.stringify({
+            output: err.toString()
+        })))
     }
 })

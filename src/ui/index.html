@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>wsh</title>
+</head>
+<script>
+    let socketId = `${socketId}`
+    let socket = new WebSocket(window.location.replace(/^https?:/, 'ws:'))
+    let outputElement = document.getElementById('output')
+
+    socket.send(socketId)
+
+    socket.onmessage = evt => {
+        outputElement.innerText += evt.data
+    }
+</script>
+<body>
+    <pre id="output"></pre>
+</body>
+</html>

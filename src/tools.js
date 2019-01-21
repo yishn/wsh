@@ -2,7 +2,7 @@ let {QrCode} = require('javascript-qrcode')
 
 exports.search = (url, description = null) => ({
     description: description || `Redirects to ${url}.`,
-    man({args}, out) {
+    help({args}, out) {
         out.send(`${this.description}\n\nSYNOPSIS\n\t${args[1]} [...query]`)
     },
     run({query, args}, out) {
@@ -13,7 +13,7 @@ exports.search = (url, description = null) => ({
 
 exports.qr = () => ({
     description: 'Get a QR code.',
-    man({args}, out) {
+    help({args}, out) {
         out.send(`${this.description}\n\nSYNOPSIS\n\t${args[1]} [...content]`)
     },
     run({query, args}, out) {

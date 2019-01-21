@@ -4,7 +4,7 @@ const userCommands = require('../commands')
 const metaCommands = {
     ls: {
         description: 'Lists all commands.',
-        man(_, out) {
+        help(_, out) {
             out.send(`${this.description}\n\nSYNOPSIS\n\tls`)
         },
         run(_, out) {
@@ -16,9 +16,9 @@ const metaCommands = {
             )
         }
     },
-    man: {
+    help: {
         description: 'Displays more information about a command.',
-        man(_, out) {
+        help(_, out) {
             out.send(`${this.description}\n\nSYNOPSIS\n\tman [command-name]`)
         },
         run(input, out) {
@@ -26,7 +26,7 @@ const metaCommands = {
 
             return command == null ? out.send('Missing command-name argument.')
                 : allCommands[command] == null ? out.send(`Command '${command}' not found.`)
-                : allCommands[command].man(input, out)
+                : allCommands[command].help(input, out)
         }
     }
 }

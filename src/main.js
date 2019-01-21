@@ -7,7 +7,7 @@ const wsh = require('./wsh')
 const app = express()
 
 app.get('/', async (req, res) => {
-    let query = req.query.q
+    let query = req.query.q || ''
 
     try {
         let result = await wsh.process(query)

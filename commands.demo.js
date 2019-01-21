@@ -16,6 +16,5 @@ module.exports = {
     gh: search('https://github.com/search?q=%s', 'Search on GitHub.'),
     npm: search('https://npmjs.com/package/%s', 'Go to npm package.'),
     wp: search('https://en.wikipedia.org/?search=%s', 'Search on English Wikipedia.'),
-    wpde: search('https://de.wikipedia.org/?search=%s', 'Search on German Wikipedia.'),
-    libgen: search('http://libgen.io/foreignfiction/index.php?s=%s&f_group=1', 'Look for a fiction book in Library Genesis.')
+    wpde: search('https://de.wikipedia.org/?search=%s', 'Search on German Wikipedia.')
 }

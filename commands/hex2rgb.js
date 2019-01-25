@@ -1,7 +1,7 @@
 module.exports = {
     description: 'Turns a hex color value into rgb notation.',
     help({args}, out) {
-        out.write(`${this.description}\n\nSYNOPSIS\n\t${args[1]} hex`)
+        out.write(`${this.description}\n\nSYNOPSIS\n\t${args[1]} <hex>`)
         out.end()
     },
     run({args}, out) {

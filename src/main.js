@@ -76,7 +76,7 @@ app.get('/', async (req, res) => {
                 }
             },
             end() {
-                if (!config.websockets) {
+                if (firstWrite || !config.websockets) {
                     let args = argvsplit(query)
 
                     res.send(renderTemplate(outputTemplate, {

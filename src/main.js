@@ -38,7 +38,7 @@ app.get('/', async (req, res) => {
             redirect(url) {
                 if (firstWrite) res.redirect(url)
             },
-            async write(data) {
+            write(data) {
                 if (firstWrite && config.websockets) {
                     socketPromise = new Promise((resolve, reject) => {
                         setTimeout(() => {
@@ -71,8 +71,11 @@ app.get('/', async (req, res) => {
                 if (!config.websockets) {
                     output += data
                 } else {
-                    let socket = await socketPromise
-                    if (socket && socket.readyState === WebSocket.OPEN) socket.send(data)
+                    socketPromise.then(socket => {
+                        if (socket && socket.readyState === WebSocket.OPEN) {
+                            socket.send(data)
+                        }
+                    })
                 }
             },
             end() {

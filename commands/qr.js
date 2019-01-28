@@ -1,4 +1,4 @@
-let {QrCode} = require('javascript-qrcode')
+let qr = require('qr.js')
 
 module.exports = {
     description: 'Get a QR code.',
@@ -14,7 +14,7 @@ module.exports = {
             return
         }
 
-        let mat = new QrCode(content).getData()
+        let mat = qr(content).modules
         if (mat.length % 2 !== 0) mat.push(mat[0].map(_ => 0))
 
         for (let y = 0; y < mat.length; y += 2) {

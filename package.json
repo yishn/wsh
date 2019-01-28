@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/yishn/wsh#readme",
   "dependencies": {
-    "argv-split": "^2.0.1",
     "express": "^4.16.4",
     "qr.js": "0.0.0",
     "uuid": "^3.3.2",

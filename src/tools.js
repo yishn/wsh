@@ -1,3 +1,7 @@
+exports.argsSplit = query => {
+    return query.match(/("[^"]+"|'[^']+'|\S+)/g)
+}
+
 exports.search = (url, description = null) => ({
     description: description || `Redirects to ${url}.`,
     help({args}, out) {

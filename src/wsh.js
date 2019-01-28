@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const argvsplit = require('argv-split')
+const {argsSplit} = require('./tools')
 
 let allCommands = {}
 
@@ -58,7 +58,7 @@ exports.loadCommands = () => {
 
 exports.process = (query, out) => {
     let args = []
-    try { args = argvsplit(query.trim()) } catch (err) { }
+    try { args = argsSplit(query) } catch (err) { }
     if (args.length === 0) throw new Error('Badly formed query.')
 
     let command = allCommands[args[0]]

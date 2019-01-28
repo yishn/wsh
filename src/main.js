@@ -3,12 +3,12 @@
 const fs = require('fs')
 const http = require('http')
 const path = require('path')
-const argvsplit = require('argv-split')
 const express = require('express')
 const uuid = require('uuid/v4')
 const WebSocket = require('ws')
 
 const config = require('../config')
+const {argsSplit} = require('./tools')
 const wsh = require('./wsh')
 
 let app = express()
@@ -46,7 +46,7 @@ app.get('/', async (req, res) => {
                             reject()
                         }, 10000)
 
-                        let args = argvsplit(query)
+                        let args = argsSplit(query)
 
                         res.send(renderTemplate(outputTemplate, {
                             socketId,
@@ -80,7 +80,7 @@ app.get('/', async (req, res) => {
             },
             end() {
                 if (firstWrite || !config.websockets) {
-                    let args = argvsplit(query)
+                    let args = argsSplit(query)
 
                     res.send(renderTemplate(outputTemplate, {
                         query,

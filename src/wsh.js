@@ -62,7 +62,7 @@ exports.process = (query, out) => {
     if (args.length === 0) throw new Error('Badly formed query.')
 
     let command = allCommands[args[0]]
-    if (command == null) throw new Error(`Command '${args[0]}' not found.`)
+    if (command == null) throw new Error(`Command \`${args[0]}\` not found.`)
 
     command.run({query, args}, out)
 }

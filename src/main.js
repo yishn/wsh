@@ -22,7 +22,7 @@ let outputTemplate = fs.readFileSync(path.join(__dirname, 'ui', 'index.html'), '
 wsh.loadCommands()
 
 function renderTemplate(template, state) {
-    return outputTemplate.replace('`{{state}}`', JSON.stringify(state))
+    return template.replace('`{{state}}`', JSON.stringify(state))
 }
 
 app.get('/', async (req, res) => {
